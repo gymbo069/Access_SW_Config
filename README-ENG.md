@@ -6,6 +6,17 @@
 
 This Python script is designed to generate Cisco access switch configuration files based on data provided in an Excel spreadsheet. The script prompts the user for additional details and generates configuration files for each switch. It also allows customization of VLANs, subnet masks, uplinks, and port-channel descriptions.
 
+---
+### Caveats
+
+- This script is designed **specifically for dual-homed (VPC-style)** access switch configurations.
+- It is **not recommended** for setups with a single uplink or without a redundant Port-Channel architecture.
+- The Excel file must be formatted properly and contain all required data. Missing or incorrect information can lead to failure during config generation.
+- User inputs such as gateway IPs, VLAN info, and uplink descriptions are critical and must be entered correctly.
+- Always review the generated configuration files before applying them to live network equipment.
+
+---
+
 ### Features:
 - Reads switch configuration data from an Excel file.
 - Converts CIDR subnet masks to standard notation.
