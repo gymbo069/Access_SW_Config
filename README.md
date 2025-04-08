@@ -1,5 +1,3 @@
-Here’s a complete README file that combines the script explanation and the example Excel table.
-
 ---
 
 # Access Switch Configuration Script
