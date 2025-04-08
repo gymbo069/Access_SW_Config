@@ -32,10 +32,11 @@ Your Excel file must contain the following column headers:
 - `port` (either 24 or 48)
 - `zone`
 - `po`
+- 'uplink'
 
 Example:
 
-| hostname | ip        | port | zone | po  |
+| hostname | ip        | port | zone | po  | 
 |----------|-----------|------|------|-----|
 | sw1      | 10.0.0.1  | 24   | ZoneA| 10  |
 | sw2      | 10.0.0.2  | 48   | ZoneB| 20  |
