@@ -67,13 +67,15 @@ Example:
     ```bash
     pip install pyinstaller
     ```
+    OR
+    pip3 install pyinstaller
 
-2. Create the `.exe` file:
+3. Create the `.exe` file:
     ```bash
     pyinstaller --onefile your_script_name.py
     ```
 
-3. Find the executable inside the `dist/` folder.
+4. Find the executable inside the `dist/` folder.
 
 ---
 
@@ -89,6 +91,9 @@ To install required libraries:
 ```bash
 pip install pandas openpyxl
 ```
+OR
+
+pip3 install pandas openpyxl
 
 ---
 
