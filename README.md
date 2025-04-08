@@ -197,4 +197,4 @@ This script is provided under the MIT License. Feel free to modify and adapt it 
 
 ---
 
-Let me know if you need further adjustments or clarifications for the README!
+
