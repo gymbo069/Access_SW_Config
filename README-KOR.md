@@ -6,6 +6,26 @@
 
 이 Python 스크립트는 Excel 스프레드시트에 제공된 데이터를 기반으로 Cisco 액세스 스위치 구성 파일을 생성하도록 설계되었습니다. 사용자는 추가 정보를 입력하도록 안내받으며, 각 스위치에 대한 구성 파일이 생성됩니다. VLAN, 서브넷 마스크, 업링크 및 포트채널 설명도 사용자 지정이 가능합니다.
 
+---
+
+## ⚠️ 주의사항 / Caution
+
+- 해당 스크립트는 **VPC 양팔 구조(dual-homed)** Access 스위치 설정 시에만 유용합니다.
+- 단일 업링크 또는 이중화 구성 없이 단독 포트채널을 사용하는 경우에는 사용하지 않는 것이 좋습니다.
+- Excel 파일은 반드시 올바른 형식과 데이터로 작성되어야 하며, 오타나 누락된 정보가 있는 경우 구성 생성이 실패할 수 있습니다.
+- 게이트웨이, VLAN 정보, 업링크 설명 등 사용자 입력값은 구성의 핵심 요소이므로 정확하게 입력해야 합니다.
+- 생성된 구성 파일은 최종 적용 전에 반드시 검토하시기 바랍니다.
+
+---
+
+- This script is designed **specifically for dual-homed (VPC-style)** access switch configurations.
+- It is **not recommended** for setups with a single uplink or without a redundant Port-Channel architecture.
+- The Excel file must be formatted properly and contain all required data. Missing or incorrect information can lead to failure during config generation.
+- User inputs such as gateway IPs, VLAN info, and uplink descriptions are critical and must be entered correctly.
+- Always review the generated configuration files before applying them to live network equipment.
+
+---
+
 ### 주요 기능:
 - Excel 파일에서 스위치 구성 데이터를 읽어옵니다.
 - CIDR 서브넷 마스크를 표준 형식으로 변환합니다.
