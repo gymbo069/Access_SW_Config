@@ -18,14 +18,6 @@
 
 ---
 
-- This script is designed **specifically for dual-homed (VPC-style)** access switch configurations.
-- It is **not recommended** for setups with a single uplink or without a redundant Port-Channel architecture.
-- The Excel file must be formatted properly and contain all required data. Missing or incorrect information can lead to failure during config generation.
-- User inputs such as gateway IPs, VLAN info, and uplink descriptions are critical and must be entered correctly.
-- Always review the generated configuration files before applying them to live network equipment.
-
----
-
 ### 주요 기능:
 - Excel 파일에서 스위치 구성 데이터를 읽어옵니다.
 - CIDR 서브넷 마스크를 표준 형식으로 변환합니다.
