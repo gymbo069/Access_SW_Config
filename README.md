@@ -50,16 +50,16 @@ pip install pandas
 | Switch3       | 192.168.3.10     | 1        | Marketing | 30     | uplink3     | 192.168.3.0/24 |
 | Switch3       | 192.168.3.11     | 2        | Marketing | 30     | uplink3     | 192.168.3.0/24 |
 
-**Explanation of Columns:**
-
-  - hostname: The name of the switch.
-  - ip: The IP address of the switch interface.
-  - port: The port number (used for configuring port ranges, typically 1-24 or 1-48).
-  - zone: The zone name (used for VLAN configurations).
-  - po: The Port-Channel number.
-  - uplink: The description of the uplink interface (used in generating port-channel configurations).
-  - netmask: The subnet in CIDR format (e.g., 192.168.1.0/24).
-    
+  **Explanation of Columns:**
+  
+    - **hostname**: The name of the switch.
+    - **ip**: The IP address of the switch interface.
+    - **port**: The port number (used for configuring port ranges, typically 1-24 or 1-48).
+    - **zone**: The zone name (used for VLAN configurations).
+    - **po**: The Port-Channel number.
+    - **uplink**: The description of the uplink interface (used in generating port-channel configurations).
+    - **netmask**: The subnet in CIDR format (e.g., 192.168.1.0/24).
+      
 2. **Run the Script:**
    - The script will prompt you to select the Excel file containing your switch configuration data.
    - It will then ask for VLAN IDs, VLAN names, and gateway IPs for each zone.
