@@ -68,8 +68,9 @@ Example:
     pip install pyinstaller
     ```
     OR
+   ```bash
     pip3 install pyinstaller
-
+   ```
 3. Create the `.exe` file:
     ```bash
     pyinstaller --onefile your_script_name.py
@@ -92,9 +93,9 @@ To install required libraries:
 pip install pandas openpyxl
 ```
 OR
-
+```bash
 pip3 install pandas openpyxl
-
+```
 ---
 
 ## Output
