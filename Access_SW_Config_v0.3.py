@@ -5,6 +5,7 @@ import zipfile
 import tkinter as tk
 from tkinter import filedialog, simpledialog, messagebox
 import re
+import ipaddress
 
 # GUI setup
 root = tk.Tk()
@@ -19,10 +20,33 @@ if not excel_path:
 # Read Excel file
 try:
     df = pd.read_excel(excel_path)
-    df.columns = df.columns.str.strip()  # Clean column names
+    df.columns = df.columns.str.strip().str.lower()  # Clean column names and convert to lowercase
 except Exception as e:
     messagebox.showerror("Error Reading Excel", str(e))
     exit()
+
+# Ensure required columns are present (case-insensitive)
+required_columns = ['hostname', 'ip', 'port', 'zone', 'po', 'uplink', 'netmask']
+missing_columns = [col for col in required_columns if col not in df.columns]
+
+if missing_columns:
+    messagebox.showerror("Missing Columns", f"The following required columns are missing: {', '.join(missing_columns)}")
+    exit()
+
+# Show columns in a pop-up message box
+column_names = ', '.join(df.columns)
+messagebox.showinfo("Columns in the Excel file", f"Columns found in the Excel file:\n{column_names}")
+
+# Function to convert CIDR to standard subnet mask
+def cidr_to_netmask(cidr):
+    return str(ipaddress.IPv4Network(f"0.0.0.0/{cidr}", strict=False).netmask)
+
+
+
+# Output folder
+today = datetime.now().strftime("%Y-%m-%d")
+output_dir = f"{today}_Access_switch_config"
+os.makedirs(output_dir, exist_ok=True)
 
 # Extract zone info from Excel and prompt user for VLAN settings
 zone_names = df['zone'].dropna().unique()
@@ -31,8 +55,18 @@ zone_config = {}
 for zone in zone_names:
     vlan = simpledialog.askinteger("Zone Config", f"Enter VLAN ID for zone '{zone}':")
     vlan_name = simpledialog.askstring("Zone Config", f"Enter VLAN Name for zone '{zone}':")
-    subnet_mask = simpledialog.askstring("Zone Config", f"Enter Subnet Mask for zone '{zone}':")
+
+    # Get the 'netmask' column case-insensitively
+    subnet_cidr = df.loc[df['zone'] == zone, 'netmask'].iloc[0]  # Column names are now all lowercase
+    subnet_mask = cidr_to_netmask(subnet_cidr.split('/')[1])  # Convert CIDR to standard subnet mask
     gateway = simpledialog.askstring("Zone Config", f"Enter Gateway IP for zone '{zone}':")
+
+    # Validate the gateway is in proper IPv4 format
+    try:
+        ipaddress.IPv4Address(gateway)
+    except ipaddress.AddressValueError:
+        messagebox.showerror("Invalid Gateway", f"The entered gateway IP '{gateway}' is not a valid IPv4 address.")
+        exit()
 
     zone_config[zone] = {
         "vlan": vlan,
@@ -41,20 +75,32 @@ for zone in zone_names:
         "gateway": gateway
     }
 
+# Function to strip numbers from a string
+def strip_numbers(desc):
+    return re.sub(r"\d+$", "", desc)
+
+
+
+# Function to check if uplink descriptions are equal after stripping numbers
+def check_uplink_desc_equal(uplink1_desc, uplink2_desc):
+    stripped_uplink1 = strip_numbers(uplink1_desc)
+    stripped_uplink2 = strip_numbers(uplink2_desc)
+    if stripped_uplink1 != stripped_uplink2:
+        messagebox.showerror("Uplink Description Mismatch", 
+                             f"The stripped uplink descriptions do not match:\n"
+                             f"Uplink 1: {stripped_uplink1}\nUplink 2: {stripped_uplink2}")
+        return False
+    return True
+
 # Ask uplink descriptions for each port
 uplink1_desc = simpledialog.askstring("Uplink Description", "Enter uplink description for TenGigabitEthernet1/1/1 (e.g., oabbsw1):")
 uplink2_desc = simpledialog.askstring("Uplink Description", "Enter uplink description for TenGigabitEthernet1/1/2 (e.g., oabbsw2):")
 
+# Check if the stripped uplink descriptions are equal
+if not check_uplink_desc_equal(uplink1_desc, uplink2_desc):
+    exit()
 # Derive common base for Port-Channel by stripping numbers from the end
-def strip_numbers(desc):
-    return re.sub(r"\d+$", "", desc)
-
 portchannel_desc = strip_numbers(uplink1_desc)
-
-# Output folder
-today = datetime.now().strftime("%Y-%m-%d")
-output_dir = f"{today}_MES_access_switch_config"
-os.makedirs(output_dir, exist_ok=True)
 
 # Generate config for each switch
 for _, row in df.iterrows():
@@ -126,7 +172,7 @@ interface range TenGigabitEthernet1/1/1-2
  channel-group 10 mode active
 
 interface Port-channel10
- description ## {portchannel_desc} Po({po}) ##
+ description ## {portchannel_desc} (Po{po}) ##
  switchport mode trunk
  switchport trunk allowed vlan {vlan}
 
